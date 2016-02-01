@@ -12,9 +12,7 @@ namespace Blog.Repository.Mock
             this.Dispose(false);
         }
 
-        public void Commit()
-        {
-        }
+        public abstract void Commit();
 
         [DebuggerStepThrough]
         public void Dispose()
