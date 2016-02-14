@@ -24,13 +24,20 @@ namespace Blog.Web.Facade
 
         public async Task<SignInResponse> Authenticate(SignInRequest req)
         {
+            if (req == null)
+            {
+                return null;
+            }
+
+            bool succeed;
             using (var unitOfWork = this.unitOfWorkProvider.Create("ro"))
             { 
-                var succeed = await this.userService.Authenticate(req.Username, req.Password);
-                if (!succeed)
-                {
-                    return null;
-                }
+                succeed = await this.userService.Authenticate(req.Username, req.Password);                
+            }
+
+            if (!succeed)
+            {
+                return null;
             }
 
             return new SignInResponse { Username = req.Username };
