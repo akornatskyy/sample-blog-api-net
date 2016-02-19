@@ -1,4 +1,6 @@
-﻿namespace Blog.Repository.Mock
+﻿using Blog.Repository.Infrastructure;
+
+namespace Blog.Repository.Mock
 {
     public sealed class UnitOfWork : AbstractUnitOfWork
     {

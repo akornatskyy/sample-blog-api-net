@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-using Blog.Repository.Infrastructure;
-
-namespace Blog.Repository.Mock
+namespace Blog.Repository.Infrastructure
 {
     public abstract class AbstractUnitOfWork : IUnitOfWork
     {
