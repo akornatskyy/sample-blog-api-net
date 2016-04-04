@@ -5,7 +5,6 @@ using Unity.WebApi;
 
 using Blog.Repository.Infrastructure;
 using Blog.Repository.Interface;
-using Blog.Repository;
 using Blog.Service.Bridge;
 using Blog.Service.Interface;
 using Blog.Web.Integration;

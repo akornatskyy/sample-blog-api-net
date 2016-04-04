@@ -8,7 +8,7 @@ using Blog.Web.Models;
 namespace Blog.Web.Controllers
 {
     [RoutePrefix(RoutePatterns.Prefix)]
-    public class SignInController : Blog.Web.Infrastructure.ApiController
+    public class SignInController : Infrastructure.ApiController
     {
         [Route(RoutePatterns.SignIn)]
         public async Task<SignInResponse> Post([FromBody]SignInRequest req)
