@@ -1,27 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 using Blog.Models;
 using Blog.Repository.Infrastructure;
 using Blog.Repository.Interface;
+using Blog.Repository.Properties;
 
 namespace Blog.Repository.Mock
 {
     public class UserRepository : IUserRepository
     {
-        private static readonly IList<Dictionary<string, object>> Users;
+        private static readonly JToken Users;
 
         private readonly ContextAccessor contextAccessor;
 
         static UserRepository()
         {
-            Users = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, object>>>>(
-                Encoding.UTF8.GetString(Properties.Resources.UserSamples))["users"];
+            var samples = JObject.Parse(Encoding.UTF8.GetString(Resources.UserSamples));
+            Users = samples["users"];
         }
 
         public UserRepository(ContextAccessor contextAccessor)
