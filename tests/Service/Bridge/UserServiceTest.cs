@@ -1,28 +1,35 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Threading.Tasks;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-using Blog.Service.Interface;
-using Blog.Service.Bridge;
-using Blog.Repository.Interface;
 using Blog.Models;
+using Blog.Repository.Interface;
+using Blog.Service.Bridge;
+using Blog.Service.Interface;
 
-namespace Blog.Service.Tests
+namespace Blog.Service.Tests.Bridge
 {
     [TestClass]
     public class UserServiceTest
     {
+        private readonly MockRepository mockRepository;
         private readonly Mock<IErrorState> mockErrorState;
         private readonly Mock<IUserRepository> mockUserRepository;
         private readonly IUserService userService;
 
         public UserServiceTest()
         {
-            this.mockErrorState = new Mock<IErrorState>(MockBehavior.Strict);
-            this.mockUserRepository = new Mock<IUserRepository>(MockBehavior.Strict);
+            this.mockRepository = new MockRepository(MockBehavior.Strict);
+            this.mockErrorState = this.mockRepository.Create<IErrorState>();
+            this.mockUserRepository = this.mockRepository.Create<IUserRepository>();
             this.userService = new UserService(this.mockErrorState.Object, this.mockUserRepository.Object);
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            this.mockRepository.VerifyAll();
         }
 
         [TestMethod]
@@ -73,7 +80,6 @@ namespace Blog.Service.Tests
                 Password = "valid",
                 IsLocked = false
             }));
-            this.mockErrorState.Setup(s => s.AddError(It.IsAny<string>()));
 
             var succeed = await this.userService.Authenticate("demo", "valid");
 
