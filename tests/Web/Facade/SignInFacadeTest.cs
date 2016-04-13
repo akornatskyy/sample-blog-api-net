@@ -13,26 +13,32 @@ namespace Blog.Web.Tests.Facade
     [TestClass]
     public sealed class SignInFacadeTest
     {
-        private readonly Mock<IUnitOfWork> mockUnitOfWork;
-        private readonly Mock<IUnitOfWorkProvider> mockUnitOfWorkProvider;
+        private readonly MockRepository mockRepository;
         private readonly Mock<IUserService> mockUserService;
         private readonly SignInFacade signInFacade;
 
         public SignInFacadeTest()
         {
-            this.mockUnitOfWork = new Mock<IUnitOfWork>(MockBehavior.Strict);
-            this.mockUnitOfWorkProvider = new Mock<IUnitOfWorkProvider>(MockBehavior.Strict);
-            this.mockUserService = new Mock<IUserService>(MockBehavior.Strict);
-            this.mockUnitOfWorkProvider.Setup(p => p.Create("ro")).Returns(this.mockUnitOfWork.Object);
-            this.mockUnitOfWork.Setup(w => w.Dispose());
-            this.signInFacade = new SignInFacade(this.mockUnitOfWorkProvider.Object, this.mockUserService.Object);
+            this.mockRepository = new MockRepository(MockBehavior.Strict);
+            var mockUnitOfWork = this.mockRepository.Create<IUnitOfWork>();
+            var mockUnitOfWorkProvider = this.mockRepository.Create<IUnitOfWorkProvider>();
+            this.mockUserService = this.mockRepository.Create<IUserService>();
+            mockUnitOfWorkProvider.Setup(p => p.Create("ro")).Returns(mockUnitOfWork.Object);
+            mockUnitOfWork.Setup(w => w.Dispose());
+            this.signInFacade = new SignInFacade(mockUnitOfWorkProvider.Object, this.mockUserService.Object);
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            this.mockRepository.VerifyAll();
         }
 
         [TestMethod]
         public async Task SignIn_Fails()
         {
             var req = new SignInRequest();
-            this.mockUserService.Setup(u => u.Authenticate(req.Username, req.Password)).Returns(Task.FromResult(false));
+            this.mockUserService.Setup(u => u.Authenticate(req.Username, req.Password)).ReturnsAsync(false);
 
             var res = await this.signInFacade.Authenticate(req);
 
