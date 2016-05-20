@@ -30,7 +30,7 @@ namespace Blog.Web.Facade
             }
 
             bool succeed;
-            using (this.unitOfWorkProvider.Create("ro"))
+            using (await this.unitOfWorkProvider.Create("ro"))
             { 
                 succeed = await this.userService.Authenticate(req.Username, req.Password);                
             }

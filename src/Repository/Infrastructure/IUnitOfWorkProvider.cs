@@ -1,7 +1,9 @@
-﻿namespace Blog.Repository.Infrastructure
+﻿using System.Threading.Tasks;
+
+namespace Blog.Repository.Infrastructure
 {
     public interface IUnitOfWorkProvider
     {
-        IUnitOfWork Create(string name = null);
+        Task<IUnitOfWork> Create(string name = null);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Blog.Repository.Infrastructure;
+﻿using System.Threading.Tasks;
+using Blog.Repository.Infrastructure;
 
 namespace Blog.Repository.Mock
 {
@@ -11,11 +12,11 @@ namespace Blog.Repository.Mock
             this.accessor = accessor;
         }
 
-        public IUnitOfWork Create(string name = null)
+        public Task<IUnitOfWork> Create(string name = null)
         {
             // ctx = new DataContext(name);
             this.accessor.Context = name;
-            return new UnitOfWork();
+            return Task.FromResult<IUnitOfWork>(new UnitOfWork());
         }
     }
 }
