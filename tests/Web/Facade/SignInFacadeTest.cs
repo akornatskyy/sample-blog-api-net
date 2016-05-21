@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Data;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Moq;
@@ -23,7 +24,7 @@ namespace Blog.Web.Tests.Facade
             var mockUnitOfWork = this.mockRepository.Create<IUnitOfWork>();
             var mockUnitOfWorkProvider = this.mockRepository.Create<IUnitOfWorkProvider>();
             this.mockUserService = this.mockRepository.Create<IUserService>();
-            mockUnitOfWorkProvider.Setup(p => p.Create("ro")).ReturnsAsync(mockUnitOfWork.Object);
+            mockUnitOfWorkProvider.Setup(p => p.Create("ro", IsolationLevel.ReadCommitted)).ReturnsAsync(mockUnitOfWork.Object);
             mockUnitOfWork.Setup(w => w.Dispose());
             this.signInFacade = new SignInFacade(mockUnitOfWorkProvider.Object, this.mockUserService.Object);
         }

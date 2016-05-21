@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Data;
+using System.Threading.Tasks;
+
 using Blog.Repository.Infrastructure;
 
 namespace Blog.Repository.Mock
@@ -12,11 +15,14 @@ namespace Blog.Repository.Mock
             this.accessor = accessor;
         }
 
-        public Task<IUnitOfWork> Create(string name = null)
+        public Task<IUnitOfWork> Create(string name, IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
-            // ctx = new DataContext(name);
-            this.accessor.Context = name;
-            return Task.FromResult<IUnitOfWork>(new UnitOfWork());
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            return Task.FromResult<IUnitOfWork>(new UnitOfWork(name, this.accessor));
         }
     }
 }
