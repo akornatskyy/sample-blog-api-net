@@ -11,9 +11,20 @@ namespace Blog.Web.Controllers
     public class SignInController : Infrastructure.ApiController
     {
         [Route(RoutePatterns.SignIn)]
-        public async Task<SignInResponse> Post([FromBody]SignInRequest req)
+        public async Task<IHttpActionResult> Post([FromBody]SignInRequest req)
         {
-            return await this.GetService<SignInFacade>().Authenticate(req);
+            if (req == null)
+            {
+                return this.BadRequest();
+            }
+
+            var resp = await this.GetService<SignInFacade>().Authenticate(req);
+            if (resp == null)
+            {
+                return this.BadRequest();
+            }
+
+            return this.Ok(resp);
         }
     }
 }

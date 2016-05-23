@@ -24,11 +24,6 @@ namespace Blog.Web.Facade
 
         public async Task<SignInResponse> Authenticate(SignInRequest req)
         {
-            if (req == null)
-            {
-                return null;
-            }
-
             bool succeed;
             using (await this.unitOfWorkProvider.Create("ro"))
             { 
