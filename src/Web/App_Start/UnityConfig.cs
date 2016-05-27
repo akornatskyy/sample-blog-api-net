@@ -1,10 +1,11 @@
+using System.Configuration;
 using System.Web.Http;
 
 using Microsoft.Practices.Unity;
+using Microsoft.Practices.Unity.Configuration;
 using Unity.WebApi;
 
 using Blog.Repository.Infrastructure;
-using Blog.Repository.Interface;
 using Blog.Service.Bridge;
 using Blog.Service.Interface;
 using Blog.Web.Integration;
@@ -26,13 +27,12 @@ namespace Blog.Web
         {
             container.RegisterType<ModelStateAccessor>(new HierarchicalLifetimeManager());
             container.RegisterType<IErrorState, ModelStateAdapter>(new HierarchicalLifetimeManager());
+            container.RegisterType<ContextAccessor>(new HierarchicalLifetimeManager());
         }
 
         private static void RegisterRepositories(IUnityContainer container)
         {
-            container.RegisterType<ContextAccessor>(new HierarchicalLifetimeManager());
-            container.RegisterType<IUnitOfWorkProvider, Repository.Mock.UnitOfWorkProvider>();
-            container.RegisterType<IUserRepository, Repository.Mock.UserRepository>(new HierarchicalLifetimeManager());
+            container.LoadConfiguration(ConfigurationManager.AppSettings["Repository.Strategy"]);
         }
 
         private static void RegisterServices(IUnityContainer container)
